@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-morph2pseudo.py
+tag.py
 ~~~~~~~~~~
 
 This script converts morpheme tagged text into pseudo-morphemes.
@@ -23,39 +23,36 @@ Usage: morph2pseudo([u'raw_string'], [u'morphed_string'], classic_or_simple)
 
 Yejin Cho (scarletcho@gmail.com)
 
-Last updated: 2016-12-22
+Last updated: 2017-01-29
 """
 
-import re
 import sys
-from konlpy.utils import pprint
+import re
 from hanja import hangul
+from konlpy.tag import Mecab
+from . import utils
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-def readfileUTF8(fname):
-    f = open(fname, 'r')
-    corpus = []
+def morphTag(in_fname, out_fname):
+    mec = Mecab()
+    corpus = utils.readfileUTF8(in_fname)
+    concat_sent = []
+    for n in range(0, len(corpus)):
+        tagged = mec.pos(corpus[n])
+        concat = ''
+        for m in range(0, len(tagged)):
+            if m < len(tagged):
+                concat = concat + tagged[m][0] + '/' + tagged[m][1] + ' '
+            elif m == len(tagged):  # When reached the final item
+                concat = concat + tagged[m][0] + '/' + tagged[m][1]
 
-    while True:
-        line = f.readline()
-        line = unicode(line.encode("utf-8"))
-        line = re.sub(u'\n', '', line)
-        if line != u'':
-            corpus.append(line)
-        if not line: break
+        concat_sent.append(concat)
+    utils.writefile(concat_sent, out_fname)
 
-    f.close()
-    return corpus
-
-
-def writefile(body, fname):
-    out = open(fname, 'w')
-    for line in body:
-        out.write('{}\n'.format(line))
-    out.close()
+    return concat_sent
 
 
 def getStrIndices(myiter, mystring):
@@ -65,17 +62,6 @@ def getStrIndices(myiter, mystring):
         endIndex = m.end()
         idxlist.append([m.span(), mystring[startIndex:endIndex]])
     return idxlist
-
-
-def getEojeolList(sentlist):
-    output_stack = []
-
-    for sent_id in range(0, len(sentlist)):
-        sent = sentlist[sent_id]
-        eojeol_list = sent.split(' ')
-        output_stack.append(eojeol_list)
-
-    return output_stack
 
 
 def concatNouns(eojeol_list):
@@ -96,7 +82,6 @@ def concatNouns(eojeol_list):
             end_unreached = True
             noun = re.compile(u'(NNG|NNP|NNB|NR|NP|XPN|XSN)')
 
-
             while end_unreached:
 
                 # Beginning of NOUN sequence
@@ -106,7 +91,7 @@ def concatNouns(eojeol_list):
                     init_idx = idx
 
                     if idx < len(idxlist_pos) - 1:  # Endpoint not reached yet
-                        idx = idx + 1   # Keep investigating
+                        idx = idx + 1  # Keep investigating
                         continuity = True
 
                         while continuity:
@@ -135,18 +120,18 @@ def concatNouns(eojeol_list):
                                     continuity = False
                                     end_unreached = False
 
-                    else:   # Endpoint reached
+                    else:  # Endpoint reached
                         # print('END!')
                         end_idx = idx
                         end_unreached = False
                         break
 
 
-                else:   # No NOUN matched
+                else:  # No NOUN matched
                     # print('NO MATCH!')
                     seq = seq + idxlist_morph[idx][1]
 
-                    if idx < len(idxlist_pos) - 1:   # Endpoint not reached yet
+                    if idx < len(idxlist_pos) - 1:  # Endpoint not reached yet
                         idx = idx + 1  # Keep investigating
 
                     else:  # Endpoint reached
@@ -202,28 +187,6 @@ def sameCheck(input_string1, input_string2):
                     same_point += 1
 
     return same_point
-
-
-def tightenString(corpus):
-    body = []  # init body
-    for line in corpus:
-        # Remove initial/final spaces surrounding given string
-        line = re.sub(u'^\s+', u'', line)
-        line = re.sub(u'\s+$', u'', line)
-
-        # Remove spaces before sentence final punctuations
-        line = re.sub(u'\s+\.', u'.', line)
-        line = re.sub(u'\s+\!', u'!', line)
-        line = re.sub(u'\s+\?', u'?', line)
-
-        # Replace multiple spaces with a single space
-        line = re.sub(u'[ \t]+', u' ', line)
-
-        if not line.isspace():  # Space check
-            if line:  # Emptiness check
-                body.append(unicode(line))
-
-    return body
 
 
 def pseudoClassic(raw, morphed):
@@ -290,7 +253,7 @@ def pseudoClassic(raw, morphed):
 
 
 def pseudoSimple(raw_sentlist, morph_sentlist):
-    eojeol_sentlist = getEojeolList(raw_sentlist)
+    eojeol_sentlist = utils.getEojeolList(raw_sentlist)
 
     pseudo_intermediate = []
     for sent_id in range(0, len(morph_sentlist)):
@@ -321,10 +284,7 @@ def pseudoSimple(raw_sentlist, morph_sentlist):
 
         out_simple.append(pseudo_sent)
 
-    out_simple = tightenString(out_simple)
-    # print('pseudo-simple: ')
-    # pprint(out_simple)
-    # print('\n')
+    out_simple = utils.tightenString(out_simple)
     return out_simple
 
 
@@ -348,8 +308,7 @@ def morph2pseudo(raw_sentlist, morph_sentlist, type):
             morph_eojeol_sentlist = sent.split(' ')
             pseudo_intermediate.append(morph_eojeol_sentlist)
 
-        eojeol_sentlist = getEojeolList(raw_sentlist)
-
+        eojeol_sentlist = utils.getEojeolList(raw_sentlist)
 
         # For each sentence in input list
         out_classic = []
@@ -369,77 +328,29 @@ def morph2pseudo(raw_sentlist, morph_sentlist, type):
 
             out_classic.append(pseudo_sent)
 
-        out_classic = tightenString(out_classic)
+        out_classic = utils.tightenString(out_classic)
 
-        # print('pseudo-classic: ')
-        # pprint(out_classic)
-        # print('\n')
         return out_classic
 
 
+def pseudomorph(rawText, morphText, pseudoType):
+    print('(1) READ FILE IN UTF8 ENCODING')
+    corpus = utils.readfileUTF8(rawText)
+    morph = utils.readfileUTF8(morphText)
 
-# # ------------------------------------------------------------------------------------------------
-# # [1] Input by giving a SINGLE variable in script
+    if pseudoType == 'simple':
+        print('(2) MORPH -> PSEUDO: simple')
+        output_simple = morph2pseudo(corpus, morph, 'simple')
 
-# raw = [u'에프 일 이선과의 인연을 이루지 못하고 옥에서 죽게 되었다']
-        # [u'공모한않았다면'] # [u'새우볶음밥이 좋아요']
-# morph = [u'에프__05/NNG 일__05/NR 이__09/NR+선__14/NNG+과/JKB+의/JKG 인연__03/NNG+을/JKO 이루__01/VV+지/EC 못하/VX+고/EC 옥__04/NNG+에서/JKB 죽__01/VV+게/EC 되__01/VV+었/EP+다/EC+돐__01/NNG+?/SW+_/SW+10/SN+//SP+?SL+쮊/NNG+/SW+/SW']
-        # [u'공모하__01/VV+ㄴ/ETM+않/VX+았/EP+다면/EC']
-# [u'새우볶음/NNG+밥__05/NNG+이/JKS 좋__08/VA+아요/EF']
-#
-# out_classic = morph2pseudo(raw, morph, 'classic')
-# pprint(out_classic)
-# out_simple = morph2pseudo(raw, morph, 'simple')
-# pprint(out_simple)
+        print('(3) WRITE OUTPUT: simple')
+        utils.writefile(output_simple, 'simple.txt')
+        print('Process finished')
 
-# # ------------------------------------------------------------------------------------------------
-# # [2] Input by variables in script
-#
-# raw_sentlist = [u'칠반아이가 몸이 불편한 줄 알고 있으면서 괴롭힙니다',
-#                 u'다시 이성을 찾은 음성으로 다희가 짧게 말했다',
-#                 u'그 돈은 효철이 다희의 입원비로 대신 물어준 백만 원이었다',
-#                 u'빳빳한 종잇장 얇디얇은 수표 한 장이 효철의 가슴을 칼날처럼 그으며 지나가는 것 같았다',
-#                 u'칼날이 지나간 자리마다 선홍색 피가 스며나왔고 효철은 저도 모르게 속으로 아아아 비명을 질렀다',
-#                 u'그리고 싸늘한 바람이 영혼까지 쪼개며 지나가는 것 같아 효철은 한순간 정신이 아득해졌다']
-#
-# morph_sentlist = [
-#     u'칠__02/NNG+반__07/NNG+아이__01/NNG+가/JKS 몸__01/NNG+이/JKS 불편하__01/VA+ㄴ/ETM 줄__04/NNB 알/VV+고/EC 있__01/VX+으면서/EC 괴롭히/VV+ㅂ니다/EF',
-#     u'다시__01/MAG 이성__08/NNG+을/JKO 찾/VV+은/ETM 음성__02/NNG+으로/JKB 다희/NNP+가/JKS 짧/VA+게/EC 말하/VV+였/EP+다/EC',
-#     u'그__01/MM 돈__01/NNG+은/JX 효철/NNP+이/JKS 다희/NNP+의/JKG 입원비/NNG+로/JKB 대신__03/NNG 물__03/VV+어/EC+주__01/VX+ㄴ/ETM 백만/NR 원__01/NNB+이/VCP+었/EP+다/EC',
-#     u'빳빳하/VA+ㄴ/ETM 종잇장/NNG 얇디얇/VA+은/ETM 수표__01/NNG 한__01/MM 장__22/NNB+이/JKS 효철/NNP+의/JKG 가슴__01/NNG+을/JKO 칼날/NNG+처럼/JKB 긋__01/VV+으며/EC 지나가/VV+는/ETM 것__01/NNB 같/VA+았/EP+다/EC',
-#     u'칼날/NNG+이/JKS 지나가/VV+ㄴ/ETM 자리__01/NNG+마다/JX 선홍색/NNG 피__02/NNG+가/JKS 스미/VV+어/EC+나오/VV+았/EP+고/EC 효철/NNP+은/JX 저__03/NP+도/JX 모르/VV+게/EC 속__01/NNG+으로/JKB 아아아/IC 비명__02/NNG+을/JKO 지르__03/VV+었/EP+다/EC',
-#     u'그리고/MAJ 싸늘하/VA+ㄴ/ETM 바람__01/NNG+이/JKS 영혼__02/NNG+까지/JX 쪼개/VV+며/EC 지나가/VV+는/ETM 것__01/NNB 같/VA+아/EC 효철/NNP+은/JX 한순간/NNG 정신__12/NNG+이/JKS 아득하/VA+여/EC+지__04/VX+었/EP+다/EF']
-#
-# output_classic = morph2pseudo(raw_sentlist, morph_sentlist, 'classic')
-# output_simple = morph2pseudo(raw_sentlist, morph_sentlist, 'simple')
-#
-# # ------------------------------------------------------------------------------------------------
-# # [3] Input by file
+    elif pseudoType == 'classic':
+        print('(2) MORPH -> PSEUDO: classic')
+        output_classic = morph2pseudo(corpus, morph, 'classic')
 
-# *** CHANGE PATH ACCORDING TO YOUR ENVIRONMENT:
-rawText = '/Users/Scarlet_Mac/Downloads/textraw_readspeech.txt'
-morphText = '/Users/Scarlet_Mac/Downloads/textraw_readspeech.txt.tag'
+        print('(3) WRITE OUTPUT: classic')
+        utils.writefile(output_classic, 'classic.txt')
+        print('Process finished')
 
-# or simply:
-# rawText = 'sampleRaw.txt'
-# morphText = 'sampleMorph.txt'
-
-print('(1) READ FILE IN UTF8 ENCODING')
-corpus = tightenString(readfileUTF8(rawText))
-morph = tightenString(readfileUTF8(morphText))
-
-print('(2) MORPH -> PSEUDO: simple')
-output_simple = morph2pseudo(corpus, morph, 'simple')
-
-print('(3) WRITE OUTPUT: simple')
-writefile(output_simple, 'readpseudo_simple.txt')
-
-
-print('(2) MORPH -> PSEUDO: classic')
-output_classic = morph2pseudo(corpus, morph, 'classic')
-
-print('(3) WRITE OUTPUT: classic')
-writefile(output_classic, 'readpseudo_classic.txt')
-
-
-# # ------------------------------------------------------------------------------------------------

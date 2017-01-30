@@ -1,28 +1,30 @@
 # -*- coding: utf-8 -*-
 """
-normalizeSejong.py
+normalize.py
 ~~~~~~~~~~
 
-This script conducts text normalization on Sejong 21st corpus of Korean.
+This script conducts text normalization on Korean corpora.
+Details are designed for normalizing Sejong 21st written corpus.
 
 Yejin Cho (scarletcho@gmail.com)
 Yeonjung Hong (yvonne.yj.hong@gmail.com)
 
-Last updated: 2016-12-14
+Last updated: 2017-01-29
 """
 
-import datetime as dt
 import re
 import sys
+import datetime as dt
 import hanja
 from korean import NumberWord, Loanword
-from konlpy.utils import pprint
+from . import utils
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
 def bySentence(corpus):
+    import re
     body = []  # init body
     for line in corpus:
         # Map '…' into '.'
@@ -40,36 +42,14 @@ def bySentence(corpus):
 
         # Split by sentence final punctuation marks
         # (i.e. period '.', question mark '?', exclamation mark '!')
-        line = re.sub(u'(?<=[\.\?\!])[ \,]', u'\n', line)   # Space/comma after punctuations '.', '!', '?'
-        line = re.sub(u'(?<=[가-힣])[\.\?\!](?=[가-힣])', u'.\n', line)   # Punctuations with no space afterwards
+        line = re.sub(u'(?<=[\.\?\!])[ \,]', u'\n', line)  # Space/comma after punctuations '.', '!', '?'
+        line = re.sub(u'(?<=[가-힣])[\.\?\!](?=[가-힣])', u'.\n', line)  # Punctuations with no space afterwards
         line = line.splitlines()
 
         for shorterline in line:
-            if not shorterline.isspace():   # Space check
-                if shorterline:             # Emptiness check
+            if not shorterline.isspace():  # Space check
+                if shorterline:  # Emptiness check
                     body.append(unicode(shorterline))
-
-    return body
-
-
-def tightenString(corpus):
-    body = []  # init body
-    for line in corpus:
-        # Remove initial/final spaces surrounding given string
-        line = re.sub(u'^\s+', u'', line)
-        line = re.sub(u'\s+$', u'', line)
-
-        # Remove spaces before sentence final punctuations
-        line = re.sub(u'\s+\.', u'.', line)
-        line = re.sub(u'\s+\!', u'!', line)
-        line = re.sub(u'\s+\?', u'?', line)
-
-        # Replace multiple spaces with a single space
-        line = re.sub(u'[ \t]+', u' ', line)
-        
-        if not line.isspace():  # Space check
-            if line:            # Emptiness check
-                body.append(unicode(line))
 
     return body
 
@@ -84,26 +64,28 @@ def normalize(corpus):
         line = readNumber(line)
 
         # Deletion
-        line = re.sub(u'(\(예:.*?\)|\[예:.*?\]|^[ \t]*예:.*?)', u'', line) # examples
-        line = re.sub(u'^\s*[\(\[<〈《【〔]*\s*[ㄱ-ㅎ가-힣][\)\]>〉》】〕]\s*(?=[가-힣]*)', u'', line) # ordered bullets
-        line = re.sub(u'\([^\)]*[^\)]+\)', u'', line)   # Everything within parentheses '()'
-        line = re.sub(u'(file://|gopher://|news://|nntp://|telnet://|https?://|ftps?://|sftp://|www\.)([a-z0-9-]+\.)+[a-z0-9]{2,4}[^ㄱ-힣\)\]\.\,\'\"\s]*''', u'', line) # web address
-        line = re.sub(u'[ㅡ-]*', u'', line)    # dashes
+        line = re.sub(u'(\(예:.*?\)|\[예:.*?\]|^[ \t]*예:.*?)', u'', line)  # examples
+        line = re.sub(u'^\s*[\(\[<〈《【〔]*\s*[ㄱ-ㅎ가-힣][\)\]>〉》】〕]\s*(?=[가-힣]*)', u'', line)  # ordered bullets
+        line = re.sub(u'\([^\)]*[^\)]+\)', u'', line)  # Everything within parentheses '()'
+        line = re.sub(
+            u'(file://|gopher://|news://|nntp://|telnet://|https?://|ftps?://|sftp://|www\.)([a-z0-9-]+\.)+[a-z0-9]{2,4}[^ㄱ-힣\)\]\.\,\'\"\s]*''',
+            u'', line)  # web address
+        line = re.sub(u'[ㅡ-]*', u'', line)  # dashes
         line = re.sub(u'[\`\'\"＂‘’“”]*', u'', line)  # quotations
         line = re.sub(u'【.*?기자[ \t]*】', u'', line)  # reporter's name
         line = re.sub(u'〔.*?〕', u'', line)  # book's title as reference
-        line = re.sub(u'[\[〈〉《》「」『』{}\]]*', u'', line)   # brackets
-        line = re.sub(u'(\w+[\w\.]*)@(\w+[\w\.]*)\.([A-Za-z]+)', u'', line) # email address
-        line = re.sub(u'\#', u'', line) # sharp
+        line = re.sub(u'[\[〈〉《》「」『』{}\]]*', u'', line)  # brackets
+        line = re.sub(u'(\w+[\w\.]*)@(\w+[\w\.]*)\.([A-Za-z]+)', u'', line)  # email address
+        line = re.sub(u'\#', u'', line)  # sharp
         line = re.sub(u'(?<=[가-힣])[A-Za-z]+[ ]?[A-Za-z]*', u'', line)  # alphabet references right after hangul
 
         # Substitution into newline
         line = re.sub(u'[=:;]', u'\n', line)  # colon ':' or semi-colon ';'
 
         # Substitution into whitespace
-        line = re.sub(u'·', u' ', line) # '·'
-        line = re.sub(u'(?<=[가-힣A-Za-z])~(?=[가-힣A-Za-z]+)', u' ', line) # tide '~' between words
-        line = re.sub(u'→', u' ', line) # arrow '→'
+        line = re.sub(u'·', u' ', line)  # '·'
+        line = re.sub(u'(?<=[가-힣A-Za-z])~(?=[가-힣A-Za-z]+)', u' ', line)  # tide '~' between words
+        line = re.sub(u'→', u' ', line)  # arrow '→'
 
         # Hangul jaum (single consonants) reading
         line = readHangulLetter(line)
@@ -121,7 +103,7 @@ def normalize(corpus):
         line = removeNonHangul(line)
 
         if not line.isspace():  # Space check
-            if line:            # Emptiness check
+            if line:  # Emptiness check
                 body.append(unicode(line))
 
     return body
@@ -153,7 +135,7 @@ def readNumber(line):
                 numint = NumberWord(int(numint)).read()
                 num = re.sub(u'\d+', numint, num)
 
-            else: # [Case 2] Floating number
+            else:  # [Case 2] Floating number
                 # Read integer part first
                 numint = re.search(u'\d+(?=\.)', num).group()
                 numint = NumberWord(int(numint)).read()
@@ -280,16 +262,6 @@ def replaceSubstring(line, newstr, ituple):
 def removeNonHangul(line):
     line = re.sub(u'[^가-힣\s]*', u'', line)
     return line
-    # body = []  # init body
-    # for line in corpus:
-    #     Remove all non-hangul characters
-    #     line = re.sub(u'[^ㄱ-힣\s]*', u'', line)
-
-        # if not line.isspace():  # Space check
-        #     if line:            # Emptiness check
-        #         body.append(unicode(line))
-
-    # return body
 
 
 def readHangulLetter(line):
@@ -313,53 +285,43 @@ def readHangulLetter(line):
     return line
 
 
-# Mark beginning time
-beg = dt.datetime.now()
+def Knormalize(in_fname, out_fname):
+    # Mark beginning time
+    beg = dt.datetime.now()
+    corpus = open(in_fname, 'r')
 
-in_fname = 'sejong_beforenormal.txt'
-out_fname = 'sejong_normalized_v3.0.txt'
+    # Re-arrange corpus by sentence based on punctuations
+    body = bySentence(corpus)
+    total_count_original = len(body)
+    print("[Step 1] Splitted by sentence")
 
-# in_fname = './sejongwritten_utf8/test.txt'
-# out_fname = 'yes.txt'
+    # Tighten string by deleting surrounding spaces
+    body = utils.tightenString(body)
+    print("[Step 2] Text tightened removing extra spaces")
 
-corpus = open(in_fname, 'r')
+    # Re-arrange corpus by sentence based on punctuations
+    body = bySentence(body)
+    print("[Step 3] Re-Splitted by sentence")
 
+    # Normalize text in general & Remove everything except hangul
+    body = normalize(body)
+    print("[Step 4] Normalization completed")
 
-# Re-arrange corpus by sentence based on punctuations
-body = bySentence(corpus)
-total_count_original = len(body)
-print("[Step 1] Splitted by sentence")
+    # Re-arrange body by sentence based on punctuations
+    body = bySentence(body)
+    print("[Step 5] Re-splitted by sentence")
 
-# Tighten string by deleting surrounding spaces
-body = tightenString(body)
-print("[Step 2] Text tightened removing extra spaces")
-
-# Re-arrange corpus by sentence based on punctuations
-body = bySentence(body)
-print("[Step 3] Re-Splitted by sentence")
-
-# Normalize text in general & Remove everything except hangul
-body = normalize(body)
-print("[Step 4] Normalization completed")
-
-# Re-arrange body by sentence based on punctuations
-body = bySentence(body)
-print("[Step 5] Re-splitted by sentence")
-
-# Final tightening up: Remove all surrounding whitespaces
-body = tightenString(body)
-print("[Step 6] Final text tightening done")
-# pprint(body)
+    # Final tightening up: Remove all surrounding whitespaces
+    body = utils.tightenString(body)
+    print("[Step 6] Final text tightening done")
+    # pprint(body)
 
 
-end = dt.datetime.now()
-print(end-beg)
+    end = dt.datetime.now()
+    print(end - beg)
 
-print("Original text length by line number: " + str(total_count_original))
-print("Normalized text length by line number: " + str(len(body)))
+    print("Original text length by line number: " + str(total_count_original))
+    print("Normalized text length by line number: " + str(len(body)))
 
+    utils.writefile(body, out_fname)
 
-out = open(out_fname, 'w')
-for line in body:
-    out.write('{}\n'.format(line))
-out.close()
