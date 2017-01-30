@@ -18,17 +18,18 @@ Last updated: 2016-01-29
 import os
 import sys
 import re
-import g2p
+from . import g2p
 
 from konlpy.utils import pprint
 from . import utils
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 # Check Python version
 ver_info = sys.version_info
 [rule_in, rule_out] = g2p.readRules(ver_info[0], './KoLM/rulebook.txt')
+
+if ver_info[0] == 2:
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
 
 def boundary2space(corpus):
