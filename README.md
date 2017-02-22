@@ -4,6 +4,7 @@
 </br>
 </br>
 
+
 ## 주요 기능  
 - 한국어 코퍼스 처리 (인코딩 변환, 파일 통합, 어절 통계, 텍스트 정규화 등)  
 - 형태소 분석 (KoNLPy의 Mecab 연동)  
@@ -17,3 +18,24 @@
 
 ## Requirements
 - Python 2.7 or 3
+- Required Python packages:
+	- KoNLPy
+	
+			$ pip install konlpy
+		
+	- JPype1
+	
+			$ pip install JPype1
+		
+	- korean
+	
+			$ pip install korean
+		
+	- hanja
+	
+			$ pip install hanja
+	
+	- Mecab
+	
+			$ bash <(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh))
+		
