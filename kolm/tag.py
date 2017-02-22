@@ -19,11 +19,12 @@ Usage: morph2pseudo([u'raw_string'], [u'morphed_string'], classic_or_simple)
 [NOTE] Please download the required python packages via pip command:
         KoNLPy ($ pip install JPype1
                 $ pip install konlpy)
+        Mecab  ($ bash <(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh))
         hanja  ($ pip install hanja)
 
 Yejin Cho (scarletcho@gmail.com)
 
-Last updated: 2017-01-29
+Last updated: 2017-02-22
 """
 
 import sys
@@ -32,8 +33,12 @@ from hanja import hangul
 from konlpy.tag import Mecab
 from . import utils
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# Check Python version
+ver_info = sys.version_info
+
+if ver_info[0] == 2:
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
 
 def morphTag(in_fname, out_fname):

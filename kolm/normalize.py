@@ -6,10 +6,15 @@ normalize.py
 This script conducts text normalization on Korean corpora.
 Details are designed for normalizing Sejong 21st written corpus.
 
+
+[NOTE] Please download the required python packages via pip command:
+        korean ($ pip install korean)
+        hanja  ($ pip install hanja)
+
 Yejin Cho (scarletcho@gmail.com)
 Yeonjung Hong (yvonne.yj.hong@gmail.com)
 
-Last updated: 2017-01-29
+Last updated: 2017-02-22
 """
 
 import re
@@ -19,8 +24,13 @@ import hanja
 from korean import NumberWord, Loanword
 from . import utils
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+
+# Check Python version
+ver_info = sys.version_info
+
+if ver_info[0] == 2:
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
 
 def bySentence(corpus):
@@ -49,7 +59,10 @@ def bySentence(corpus):
         for shorterline in line:
             if not shorterline.isspace():  # Space check
                 if shorterline:  # Emptiness check
-                    body.append(unicode(shorterline))
+                    if sys.version_info[0] == 2:
+                        body.append(unicode(shorterline))
+                    else:
+                        body.append(shorterline)
 
     return body
 
@@ -104,7 +117,10 @@ def normalize(corpus):
 
         if not line.isspace():  # Space check
             if line:  # Emptiness check
-                body.append(unicode(line))
+                if sys.version_info[0] == 2:
+                    body.append(unicode(line))
+                else:
+                    body.append(line)
 
     return body
 

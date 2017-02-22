@@ -12,20 +12,28 @@ Output: textraw
 
 Yejin Cho (scarletcho@gmail.com)
 
-Last updated: 2016-01-29
+
+[NOTE] Please download the required python packages via pip command:
+        KoNLPy ($ pip install JPype1
+                $ pip install konlpy)
+
+Last updated: 2017-02-22
 """
 
 import os
 import sys
 import re
+import site
 from . import g2p
 
 from konlpy.utils import pprint
 from . import utils
 
+
 # Check Python version
 ver_info = sys.version_info
-[rule_in, rule_out] = g2p.readRules(ver_info[0], './KoLM/rulebook.txt')
+path = site.getsitepackages()[0]
+[rule_in, rule_out] = g2p.readRules(ver_info[0], path + '/kolm/rulebook.txt')
 
 if ver_info[0] == 2:
     reload(sys)
@@ -59,7 +67,10 @@ def getUniqueWords(text_fname):
         for word in wordlist:
             if not word.isspace():  # Space check
                 if word:  # Emptiness check
-                    uqlist.append(unicode(word))
+                    if sys.version_info[0] == 2:
+                        uqlist.append(unicode(word))
+                    else:
+                        uqlist.append(word)
         idx += 1
     uqlist = list(set(uqlist))
 

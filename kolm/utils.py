@@ -7,17 +7,11 @@ This module includes useful methods for text managements for language models.
 
 *** List of Methods:
     - convertEncoding(path, encodingSource, encodingDest, flist=[])
-
     - stackFiles(path, stackFname, flist=[])
-    
     - tightenString(corpus)
-    
     - getEojeolList(sentlist)
-    
     - removeHeader(headeredfname)
-    
     - readfileUTF8(fname)
-    
     - writefile(body, fname)
 
 
@@ -28,7 +22,7 @@ This module includes useful methods for text managements for language models.
 
 Yejin Cho (scarletcho@gmail.com)
 
-Last updated: 2017-01-29
+Last updated: 2017-02-22
 """
 
 import os
@@ -37,10 +31,15 @@ import re
 import glob
 from konlpy.utils import pprint
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
+# Check Python version
+ver_info = sys.version_info
 
+if ver_info[0] == 2:
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
+            
 def convertEncoding(path, encodingSource, encodingDest, flist=[]):
     os.chdir(path)
 
@@ -95,10 +94,14 @@ def tightenString(corpus):
 
         # Replace multiple spaces with a single space
         line = re.sub(u'[ \t]+', u' ', line)
+        line = re.sub(u'^\n$', u'', line)
 
         if not line.isspace():  # Space check
             if line:  # Emptiness check
-                body.append(unicode(line))
+                if ver_info[0] == 2:
+                    body.append(unicode(line))
+                else:
+                    body.append(line)
 
     return body
 
@@ -167,8 +170,11 @@ def readfileUTF8(fname):
 
     while True:
         line = f.readline()
-        line = unicode(line.encode("utf-8"))
-        line = re.sub(u'\n', '', line)
+        if ver_info[0] == 2:
+            line = unicode(line.encode("utf-8"))
+            line = re.sub(u'\n', u'', line)
+        elif ver_info[0] == 3:
+            line = re.sub('\n', '', line)
         if line != u'':
             corpus.append(line)
         if not line: break

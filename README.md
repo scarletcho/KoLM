@@ -4,7 +4,7 @@
 </br>
 </br>
 ## Requirements
-- Python 2.7
+- Python 2.7 or 3
 
 ## 주요 기능  
 - 한국어 코퍼스 처리 (인코딩 변환, 파일 통합, 어절 통계, 텍스트 정규화 등)  
@@ -13,5 +13,5 @@
 - 문자열로부터 발음열 생성(Grapheme-to-Phone; G2P)  
 - 언어모델 제작을 위한 파일 생성
 	- 정제된 코퍼스 원문(textraw) 생성  
-	- 발음사전(lexicon.txt) 생성  
+	- 발음사전(lexicon.txt) 생성
 
