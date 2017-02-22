@@ -55,7 +55,10 @@ def readfileUTF8(fname):
 
     while True:
         line = f.readline()
-        line = unicode(line.encode("utf-8"))
+        if sys.version_info[0] == 2:
+            line = unicode(line.encode("utf-8"))
+        else:
+            line = line.encode("utf-8")
         line = re.sub(u'\n', u'', line)
         if line != u'':
             corpus.append(line)
