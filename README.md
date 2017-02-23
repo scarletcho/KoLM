@@ -45,6 +45,7 @@
 			$ bash <(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh))
 	- [Note] The above packages are **automatically installed** as you install KoLM via pip
 </br>
+</br>
 
 ## Installation
 - The latest version is available in PyPI:  
@@ -52,57 +53,63 @@
 		$ pip install kolm
 </br>
 
-## Tutorial
-### 1. utils
+# Tutorial: How to use KoLM
+## 1. utils
 - Start by importing every methods in **kolm.utils**
 	
 		>> from kolm.utils import *
 
-- **convertEncoding***(path, encodingSource, encodingDest, flist=[])*
+1. **File management**
+	- **readfileUTF8***(fname)*
+	
+			# UTF-8 인코딩된 특정 파일(song15.txt)을 읽어들이기
+			>> readfileUTF8('song15.txt')
+			
+	- **writefile***(body, fname)*
+	
+			# mydir 내 모든 텍스트의 인코딩을 UTF-16에서 UTF-8로 변환하기
+			>> convertEncoding('mydir', 'utf-16', 'utf-8')
+			
+	- **stackFiles***(path, stackFname, flist=[])*
+	
+			# mydir 내 모든 텍스트를 한 파일로 모아 mystack.txt 로 저장하기
+			>> stackFiles('mydir', 'mystack.txt')
+	
+			# mydir 내 특정 파일들(song1.txt, song2.txt, song15.txt)을 한 파일로 모아 mystack.txt 로 저장하기
+			>> stackFiles('mydir', 'mystack.txt', ['song1.txt', 'song2.txt', 'song15.txt'])		
+</br>
+2. **Encoding**  
+	- **convertEncoding***(path, encodingSource, encodingDest, flist=[])*
+	
+			# mydir 내 모든 텍스트의 인코딩을 UTF-16에서 UTF-8로 변환
+			>> convertEncoding('mydir', 'utf-16', 'utf-8')
+			
+			# mydir 내 특정 파일들(song1.txt, song2.txt, song15.txt)의 인코딩을 UTF-16에서 UTF-8로 변환
+			>> convertEncoding('mydir', 'utf-16', 'utf-8', ['song1.txt', 'song2.txt', 'song15.txt'])
+</br>
+3. **Text management**
+	- **tightenString***(corpus)*
 
-		# mydir 내 모든 텍스트의 인코딩을 UTF-16에서 UTF-8로 변환
-		>> convertEncoding('mydir', 'utf-16', 'utf-8')
-		
-		# mydir 내 특정 파일들(song1.txt, song2.txt, song15.txt)의 인코딩을 UTF-16에서 UTF-8로 변환
-		>> convertEncoding('mydir', 'utf-16', 'utf-8', ['song1.txt', 'song2.txt', 'song15.txt'])
-		
-- **stackFiles***(path, stackFname, flist=[])*
-
-		# mydir 내 모든 텍스트를 한 파일로 모아 mystack.txt 로 저장하기
-		>> stackFiles('mydir', 'mystack.txt')
-
-		# mydir 내 특정 파일들(song1.txt, song2.txt, song15.txt)을 한 파일로 모아 mystack.txt 로 저장하기
-		>> stackFiles('mydir', 'mystack.txt', ['song1.txt', 'song2.txt', 'song15.txt'])		
-		
-- **tightenString***(corpus)*
-
-		>> tightenString(corpus)
-
-- **getEojeolList***(sentlist)*
-
-		>> getEojeolList(['짧은 문장을 넣었다', '새해 복', '집에 갔더니 밥이 없네')
-		
-- **removeHeader***(headeredfname)*
-
-		>> convertEncoding('mydir', 'utf-16', 'utf-8')
-
-- **readfileUTF8***(fname)*
-
-		# UTF-8 인코딩된 특정 파일(song15.txt)을 읽어들이기
-		>> readfileUTF8('song15.txt')
-		
-- **writefile***(body, fname)*
-
-		# mydir 내 모든 텍스트의 인코딩을 UTF-16에서 UTF-8로 변환하기
-		>> convertEncoding('mydir', 'utf-16', 'utf-8')
+			# 텍스트 리스트 내 잉여적인 공백 정리 및 삭제
+			>> tightenString(corpus)
+	
+	- **getEojeolList***(sentlist)*
+			
+			# 문장 리스트에서 어절 리스트 추출
+			>> getEojeolList(['짧은 문장을 넣었다', '새해 복', '집에 갔더니 밥이 없네')
+			
+	- **removeHeader***(headeredfname)*
+	
+			>> convertEncoding('mydir', 'utf-16', 'utf-8')
+	
 
 </br>
-### 2. normalize
+## 2. normalize
 - Start by importing every methods in **kolm.normalize**
 	
 		>> from kolm.normalize import *
 
-1. Normalization
+1. **Normalization**
 	- **Knormalize***(in\_fname, out\_fname)*
 
 			# Normalize a textfile
@@ -120,8 +127,8 @@
 	- **removeNonHangul***(line)*
 	
 			>> removeNonHangul(line)
-
-2. Character reading in Korean
+</br>
+2. **Character reading in Korean**
 	- Alphabets	
 		- **readABC***(line)*
 		
@@ -141,52 +148,65 @@
 		
 				>> readHangulLetter('ㅊ을 ㅈ으로 적었다')
 				치읓을 지읒으로 적었다
-
-3. Number reading in Korean
-	- Numbers
-		- **readNumber***(line)*
-		
-				>> readNumber(line)
+</br>
+3. **Number reading in Korean**
+	- **readNumber***(line)*
+	
+			>> readNumber(line)
 
 </br>
-### 3. tag
+## 3. tag
 - Start by importing every methods in **kolm.tag**
 	
 		>> from kolm.tag import *
+		
+1. **Morphemes**
+	- **morphTag***(in\_fname, out\_fname)*
+	
+			# Mecab 형태소분석
+			>> morphTag(in_fname, out_fname)
+</br>
+2. **Pseudo-morphemes**  
+	- **morph2pseudo***(raw\_sentlist, morph_sentlist, type)*
 
-- **morph2pseudo***(raw\_sentlist, morph_sentlist, type)*
+			# 문장 리스트로부터 의사형태소(최소 크기) 문장 리스트 생성
+			>> morph2pseudo(raw_sentlist, morph_sentlist, 'classic')
+	
+			# 문장 리스트로부터 의사형태소(중간 크기) 문장 리스트 생성
+			>> morph2pseudo(raw_sentlist, morph_sentlist, 'simple')
+			
+	- **pseudomorph***(rawText, morphText, pseudoType)*
+		
+			# 문장 하나로부터 의사형태소(최소 크기) 문장 생성
+			>> pseudomorph(rawText, morphText, 'classic')
 
-		>> morph2pseudo(raw_sentlist, morph_sentlist, type)
-
-- **pseudomorph***(rawText, morphText, pseudoType)*
-
-		>> pseudomorph(rawText, morphText, pseudoType)
-
-- **morphTag***(in\_fname, out\_fname)*
-
-		>> morphTag(in_fname, out_fname)
+			# 문장 하나로부터 의사형태소(중간 크기) 문장 생성
+			>> pseudomorph(rawText, morphText, 'simple')
 
 
 </br>
-### 4. lm
+## 4. lm
 - Start by importing every methods in **kolm.lm**
 	
 		>> from kolm.lm import *
 
 - **writeTextraw***(corpus)*
-
+		
+		# 정제를 마친 단일 말뭉치 파일(textraw) 생성
 		>> writeTextraw(corpus)
 
 - **getUniqueWords***(text\_fname)*
 
+		# 고유 어절(또는 형태소; 말뭉치 상의 띄어쓰기된 단위를 의미)목록(wordlist.txt) 추출
 		>> getUniqueWords(text_fname)
 
 - **writeLexicon***(text\_fname)*
-
+		
+		# 고유 어절목록에 G2P를 적용한 발음사전(lexicon.txt) 생성
 		>> writeLexicon(text_fname)
 
 
-### 5. g2p
+## 5. g2p
 - Start by importing every methods in **kolm.g2p**
 	
 		>> from kolm.g2p import *
