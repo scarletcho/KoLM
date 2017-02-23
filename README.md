@@ -204,7 +204,7 @@
 		
 		# 고유 어절목록에 G2P를 적용한 발음사전(lexicon.txt) 생성
 		>> writeLexicon(text_fname)
-
+</br>
 
 ## 5. g2p
 - Start by importing every methods in **kolm.g2p**
@@ -225,7 +225,7 @@
 	- **readRules***(pver, rulebook)*
 
 			>> readRules(pver, rulebook)
-
+</br>
 2. **Auxiliaries**
 	- **phone2prono***(phones, rule\_in, rule\_out)*
 	
