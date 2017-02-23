@@ -35,26 +35,8 @@
 
 ## Requirements
 - Python 2.7 or 3
-- Required Python packages:  
-	- KoNLPy
-	
-			$ pip install konlpy
-		
-	- JPype1
-	
-			$ pip install JPype1
-		
-	- korean
-	
-			$ pip install korean
-		
-	- hanja
-	
-			$ pip install hanja
-	
-	- Mecab
-	
-			$ bash <(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh))
+- Required Python packages:
+	- KoNLPy, JPype1, korean, hanja, Mecab
 	- [Note] The above packages are **automatically installed** as you install KoLM via pip
 </br>
 </br>
