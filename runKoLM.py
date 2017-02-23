@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-runkolm.py
+runKoLM.py
 ~~~~~~~~~~
 
 This is a sample wrapper for using kolm Python package.
@@ -12,8 +12,6 @@ Yejin Cho (scarletcho@gmail.com)
 Last updated: 2017-02-22
 """
 
-
-# datapath = '/Users/Scarlet_Mac/mydata/'
 
 datapath = '/Users/Scarlet_Mac/mydata/'
 
