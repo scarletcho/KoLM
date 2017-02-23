@@ -65,7 +65,27 @@
 		$ pip install kolm
 </br>
 
-# Tutorial: How to use KoLM
+## Tutorial: How to use KoLM
+* 말뭉치 정제 작업 가이드:
+	* (1) 모든 텍스트를 UTF-8로 인코딩 변환
+		* utils.**convertEncoding**
+	* (2) 모든 텍스트를 하나로 이어붙여 저장하기
+		* utils.**stackFiles**
+	* (3) TEI 헤더 (또는 분석대상이 아닌 태그류) 제거
+		* utils.**removeHeader**
+	* (4) 텍스트 정규화
+		* normalize.**Knormalize**
+	* (5) 형태소분석
+		* tag.**morphTag**
+	* (6) 원문-형태소 대조를 통한 의사형태소 추출
+		* tag.**pseudomorph**
+	* (7) 정제텍스트(textraw)와 발음사전(lexicon.txt) 생성
+		* lm.**writeTextraw**
+		* lm.**getUniqueWords**
+		* lm.**writeLexicon**
+
+* 구체적인 사용 예시 코드를 보려면 **runKoLM.py** 를 참조하세요.
+
 ## 1. utils
 - Start by importing every methods in **kolm.utils**
 	

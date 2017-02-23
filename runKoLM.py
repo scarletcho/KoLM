@@ -55,7 +55,7 @@ from kolm.normalize import *
 Knormalize('stack.txt', 'normalized.txt')
 
 
-# (5) Morpheme analysis on raw text'
+# (5) Morpheme analysis on raw text
 from kolm.tag import *
 morphTag('normalized.txt', 'tagged.txt')
 
