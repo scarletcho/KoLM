@@ -38,7 +38,7 @@ parser = optparse.OptionParser()
 parser.add_option("-v", action="store_true", dest="verbose", default="False",
                   help="This option prints the detail information of g2p process.")
 
-(options,args) = parser.parse_args()
+options, args = parser.parse_args()
 verbose = options.verbose
 
 # Check Python version
@@ -47,10 +47,10 @@ ver_info = sys.version_info
 if ver_info[0] == 2:
     reload(sys)
     sys.setdefaultencoding('utf-8')
-    
+
 
 def readfileUTF8(fname):
-    with open(fname, 'r') as f
+    with open(fname, 'r') as f:
         corpus = []
 
         while True:
@@ -62,19 +62,19 @@ def readfileUTF8(fname):
             line = re.sub(u'\n', u'', line)
             if line != u'':
                 corpus.append(line)
-            if not line: break
+            if not line:
+                break
     return corpus
 
 
 def writefile(body, fname):
     with open(fname, 'w') as out:
-    for line in body:
-        out.write('{}\n'.format(line))
+        for line in body:
+            out.write('{}\n'.format(line))
 
 
 def readRules(pver, rulebook):
-    with open(rulebook, 'r') as f
-
+    with open(rulebook, 'r') as f:
         rule_in = []
         rule_out = []
 
@@ -94,7 +94,8 @@ def readRules(pver, rulebook):
                         rule_out.append(IOlist[1])
                     else:   # If output is empty (i.e. deletion rule)
                         rule_out.append(u'')
-            if not line: break
+            if not line:
+                break
 
     return rule_in, rule_out
 
@@ -243,7 +244,7 @@ def graph2prono(graphs, rule_in, rule_out):
     identical = False
     loop_cnt = 1
 
-    if verbose == True:
+    if verbose is True:
         print ('=> Romanized: ' + romanized)
         print ('=> Romanized with boundaries: ' + romanized_bd)
         print ('=> Initial output: ' + prono)
@@ -256,12 +257,12 @@ def graph2prono(graphs, rule_in, rule_out):
         if re.sub(u'-', u'', prono_prev) == re.sub(u'-', u'', prono_new):
             identical = True
             prono_new = re.sub(u'-', u'', prono_new)
-            if verbose == True:
+            if verbose is True:
                 print('\n=> Exhaustive rule application completed!')
                 print('=> Total loop count: ' + str(loop_cnt))
                 print('=> Output: ' + prono_new)
         else:
-            if verbose == True:
+            if verbose is True:
                 print('\n=> Rule applied for more than once')
                 print('cmp1: ' + re.sub(u'-', u'', prono_prev))
                 print('cmp2: ' + re.sub(u'-', u'', prono_new))
@@ -309,13 +310,12 @@ def runKoG2P(graph, rulebook):
 def runTest(rulebook, testset):
     print('[ G2P Performance Test ]')
     beg = dt.datetime.now()
-    
+
     testG2P(rulebook, testset)
-    
+
     end = dt.datetime.now()
     print('Total time: ')
     print(end - beg)
-
 
 
 # Usage:
@@ -330,4 +330,3 @@ if __name__ == '__main__':
     else:
         graph = args[0]
         runKoG2P(graph, rulebook_path)
-
