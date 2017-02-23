@@ -1,0 +1,15 @@
+MANIFEST.in
+setup.py
+kolm/__init__.py
+kolm/g2p.py
+kolm/lm.py
+kolm/normalize.py
+kolm/rulebook.txt
+kolm/tag.py
+kolm/testset.txt
+kolm/utils.py
+kolm.egg-info/PKG-INFO
+kolm.egg-info/SOURCES.txt
+kolm.egg-info/dependency_links.txt
+kolm.egg-info/requires.txt
+kolm.egg-info/top_level.txt

@@ -1,0 +1,4 @@
+JPype1
+konlpy
+korean
+hanja

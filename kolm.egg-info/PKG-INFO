@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: kolm
+Version: 1.0.2
+Summary: Korean LM toolkit for building ASR system
+Home-page: https://github.com/scarletcho/KoLM
+Author: Yejin Cho
+Author-email: scarletcho@gmail.com
+License: UNKNOWN
+Description: UNKNOWN
+Keywords: Korean Language Modeling Toolkit
+Platform: UNKNOWN

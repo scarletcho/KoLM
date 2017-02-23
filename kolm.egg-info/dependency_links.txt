@@ -1,0 +1,1 @@
+https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh
