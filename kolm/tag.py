@@ -31,7 +31,7 @@ import sys
 import re
 from hanja import hangul
 from konlpy.tag import Mecab
-from . import utils
+from kolm.utils import *
 
 # Check Python version
 ver_info = sys.version_info
@@ -43,7 +43,7 @@ if ver_info[0] == 2:
 
 def morphTag(in_fname, out_fname):
     mec = Mecab()
-    corpus = utils.readfileUTF8(in_fname)
+    corpus = readfileUTF8(in_fname)
     concat_sent = []
     for n in range(0, len(corpus)):
         tagged = mec.pos(corpus[n])
@@ -55,7 +55,7 @@ def morphTag(in_fname, out_fname):
                 concat = concat + tagged[m][0] + '/' + tagged[m][1]
 
         concat_sent.append(concat)
-    utils.writefile(concat_sent, out_fname)
+    writefile(concat_sent, out_fname)
 
     return concat_sent
 
@@ -258,7 +258,7 @@ def pseudoClassic(raw, morphed):
 
 
 def pseudoSimple(raw_sentlist, morph_sentlist):
-    eojeol_sentlist = utils.getEojeolList(raw_sentlist)
+    eojeol_sentlist = getEojeolList(raw_sentlist)
 
     pseudo_intermediate = []
     for sent_id in range(0, len(morph_sentlist)):
@@ -289,16 +289,22 @@ def pseudoSimple(raw_sentlist, morph_sentlist):
 
         out_simple.append(pseudo_sent)
 
-    out_simple = utils.tightenString(out_simple)
+    out_simple = tightenString(out_simple)
     return out_simple
 
 
 def morph2pseudo(raw_sentlist, morph_sentlist, type):
     # Data type conversion in case the input is given as string
-    if isinstance(raw_sentlist, basestring):
-        raw_sentlist = [raw_sentlist]
-    if isinstance(morph_sentlist, basestring):
-        morph_sentlist = [morph_sentlist]
+    if ver_info[0] == 2:
+        if isinstance(raw_sentlist, basestring):
+            raw_sentlist = [raw_sentlist]
+        if isinstance(morph_sentlist, basestring):
+            morph_sentlist = [morph_sentlist]
+    else:
+        if isinstance(raw_sentlist, str):
+            raw_sentlist = [raw_sentlist]
+        if isinstance(morph_sentlist, str):
+            morph_sentlist = [morph_sentlist]
 
     # (1) Convert to SIMPLE pseudo-morpheme
     if type == 'simple':
@@ -310,10 +316,10 @@ def morph2pseudo(raw_sentlist, morph_sentlist, type):
         pseudo_intermediate = []
         for sent_id in range(0, len(morph_sentlist)):
             sent = re.sub(u'[_/\dA-Z]', '', morph_sentlist[sent_id])
-            morph_eojeol_sentlist = sent.split(' ')
+            morph_eojeol_sentlist = sent.split(u' ')
             pseudo_intermediate.append(morph_eojeol_sentlist)
 
-        eojeol_sentlist = utils.getEojeolList(raw_sentlist)
+        eojeol_sentlist = getEojeolList(raw_sentlist)
 
         # For each sentence in input list
         out_classic = []
@@ -323,32 +329,32 @@ def morph2pseudo(raw_sentlist, morph_sentlist, type):
             pseu = pseudo_intermediate[sentIdx]
 
             # For each item in input sentence(s)
-            pseudo_sent = ''
+            pseudo_sent = u''
             for itemIdx in range(0, len(eoj)):
                 e = eoj[itemIdx]
                 p = pseu[itemIdx]
 
                 pseudo_item = pseudoClassic(e, p)
-                pseudo_sent = pseudo_sent + ' ' + pseudo_item
+                pseudo_sent = pseudo_sent + u' ' + pseudo_item
 
             out_classic.append(pseudo_sent)
 
-        out_classic = utils.tightenString(out_classic)
+        out_classic = tightenString(out_classic)
 
         return out_classic
 
 
 def pseudomorph(rawText, morphText, pseudoType):
     print('(1) READ FILE IN UTF8 ENCODING')
-    corpus = utils.readfileUTF8(rawText)
-    morph = utils.readfileUTF8(morphText)
+    corpus = readfileUTF8(rawText)
+    morph = readfileUTF8(morphText)
 
     if pseudoType == 'simple':
         print('(2) MORPH -> PSEUDO: simple')
         output_simple = morph2pseudo(corpus, morph, 'simple')
 
         print('(3) WRITE OUTPUT: simple')
-        utils.writefile(output_simple, 'simple.txt')
+        writefile(output_simple, 'simple.txt')
         print('Process finished')
 
     elif pseudoType == 'classic':
@@ -356,6 +362,6 @@ def pseudomorph(rawText, morphText, pseudoType):
         output_classic = morph2pseudo(corpus, morph, 'classic')
 
         print('(3) WRITE OUTPUT: classic')
-        utils.writefile(output_classic, 'classic.txt')
+        writefile(output_classic, 'classic.txt')
         print('Process finished')
 
