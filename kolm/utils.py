@@ -77,6 +77,9 @@ def stackFiles(path, stackFname, flist=[]):
         for fname in flist:
             with open(fname) as infile:
                 for line in infile:
+                    # Add a newline before concatenating files (if line break doesn't exists)
+                    if line[-1] != '\n':
+                        line = line 
                     outfile.write(line)
 
 
