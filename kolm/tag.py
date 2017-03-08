@@ -295,16 +295,10 @@ def pseudoSimple(raw_sentlist, morph_sentlist):
 
 def morph2pseudo(raw_sentlist, morph_sentlist, type):
     # Data type conversion in case the input is given as string
-    if ver_info[0] == 2:
-        if isinstance(raw_sentlist, basestring):
-            raw_sentlist = [raw_sentlist]
-        if isinstance(morph_sentlist, basestring):
-            morph_sentlist = [morph_sentlist]
-    else:
-        if isinstance(raw_sentlist, str):
-            raw_sentlist = [raw_sentlist]
-        if isinstance(morph_sentlist, str):
-            morph_sentlist = [morph_sentlist]
+    if isinstance(raw_sentlist, str):
+        raw_sentlist = [raw_sentlist]
+    if isinstance(morph_sentlist, str):
+        morph_sentlist = [morph_sentlist]
 
     # (1) Convert to SIMPLE pseudo-morpheme
     if type == 'simple':

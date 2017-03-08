@@ -45,7 +45,7 @@ def convertEncoding(path, encodingSource, encodingDest, flist=[]):
 
     if len(flist) == 0:
         flist = glob.glob('*.txt')
-    elif isinstance(flist, basestring):
+    elif isinstance(flist, str):
         flist = [flist]
 
     if type(flist) is list:
@@ -70,7 +70,7 @@ def stackFiles(path, stackFname, flist=[]):
 
     if len(flist) == 0:
         flist = glob.glob('*.txt')
-    elif isinstance(flist, basestring):
+    elif isinstance(flist, str):
         flist = [flist]
 
     with open(stackFname, 'w') as outfile:

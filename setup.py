@@ -2,7 +2,7 @@ from setuptools import setup
 print('Setting up KoLM...')
 setup(
     name = "kolm",
-    version = "1.0.6",
+    version = "1.1.0",
     description = "Korean LM toolkit for building ASR system",
     author = "Yejin Cho",
     author_email = "scarletcho@gmail.com",
