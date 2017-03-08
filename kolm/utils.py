@@ -79,7 +79,7 @@ def stackFiles(path, stackFname, flist=[]):
                 for line in infile:
                     # Add a newline before concatenating files (if line break doesn't exists)
                     if line[-1] != '\n':
-                        line = line 
+                        line = line + '\n'
                     outfile.write(line)
 
 
