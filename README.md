@@ -69,7 +69,7 @@
 * 구체적인 사용 예시 코드를 보려면 **runKoLM.py** 를 참조하세요.
 
 ## 1. utils
-- Start by importing every methods in **kolm.utils**
+- Start by importing every method in **kolm.utils**
 	
 		>> from kolm.utils import *
 
@@ -119,7 +119,7 @@
 
 </br>
 ## 2. normalize
-- Start by importing every methods in **kolm.normalize**
+- Start by importing every method in **kolm.normalize**
 	
 		>> from kolm.normalize import *
 
@@ -170,7 +170,7 @@
 
 </br>
 ## 3. tag
-- Start by importing every methods in **kolm.tag**
+- Start by importing every method in **kolm.tag**
 	
 		>> from kolm.tag import *
 		
@@ -200,7 +200,7 @@
 
 </br>
 ## 4. lm
-- Start by importing every methods in **kolm.lm**
+- Start by importing every method in **kolm.lm**
 	
 		>> from kolm.lm import *
 
@@ -221,7 +221,7 @@
 </br>
 
 ## 5. g2p
-- Start by importing every methods in **kolm.g2p**
+- Start by importing every method in **kolm.g2p**
 	
 		>> from kolm.g2p import *
 
