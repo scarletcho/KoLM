@@ -8,12 +8,12 @@ This script converts morpheme tagged text into pseudo-morphemes.
 Input: 1) List of raw text (unicode)
        2) List of morpheme-analyzed text (unicode)
        3) Type of pseudo-morpheme:
-            - 'classic':  conventional style
-            - 'simple':   simplified style which only separates noun clusters out
+            - 'micro':  conventional style
+            - 'medium':   simplified style which only separates noun clusters out
 
 Output: A text file (or list variable) with pseudo-morpheme boundaries.
 
-Usage: morph2pseudo([u'raw_string'], [u'morphed_string'], classic_or_simple)
+Usage: morph2pseudo([u'raw_string'], [u'morphed_string'], micro_or_medium)
 
 
 [NOTE] Please download the required python packages via pip command:
@@ -194,7 +194,7 @@ def sameCheck(input_string1, input_string2):
     return same_point
 
 
-def pseudoClassic(raw, morphed):
+def pseudomicro(raw, morphed):
     result_buffer = []
     carry_buffer = []
 
@@ -257,7 +257,7 @@ def pseudoClassic(raw, morphed):
     return ''.join(result_buffer)
 
 
-def pseudoSimple(raw_sentlist, morph_sentlist):
+def pseudomedium(raw_sentlist, morph_sentlist):
     eojeol_sentlist = getEojeolList(raw_sentlist)
 
     pseudo_intermediate = []
@@ -272,7 +272,7 @@ def pseudoSimple(raw_sentlist, morph_sentlist):
         pseudo_intermediate.append(output)
 
     # For each sentence in input list
-    out_simple = []
+    out_medium = []
     for sentIdx in range(0, len(eojeol_sentlist)):
         print('sentence #: ' + str(sentIdx))
         eoj = eojeol_sentlist[sentIdx]
@@ -284,13 +284,13 @@ def pseudoSimple(raw_sentlist, morph_sentlist):
             e = eoj[itemIdx]
             p = pseu[itemIdx]
 
-            pseudo_item = pseudoClassic(e, p)
+            pseudo_item = pseudomicro(e, p)
             pseudo_sent = pseudo_sent + ' ' + pseudo_item
 
-        out_simple.append(pseudo_sent)
+        out_medium.append(pseudo_sent)
 
-    out_simple = tightenString(out_simple)
-    return out_simple
+    out_medium = tightenString(out_medium)
+    return out_medium
 
 
 def morph2pseudo(raw_sentlist, morph_sentlist, type):
@@ -300,13 +300,13 @@ def morph2pseudo(raw_sentlist, morph_sentlist, type):
     if isinstance(morph_sentlist, str):
         morph_sentlist = [morph_sentlist]
 
-    # (1) Convert to SIMPLE pseudo-morpheme
-    if type == 'simple':
-        out_simple = pseudoSimple(raw_sentlist, morph_sentlist)
-        return out_simple
+    # (1) Convert to medium pseudo-morpheme
+    if type == 'medium':
+        out_medium = pseudomedium(raw_sentlist, morph_sentlist)
+        return out_medium
 
-    # (2) Convert to CLASSIC pseudo-morpheme
-    elif type == 'classic':
+    # (2) Convert to micro pseudo-morpheme
+    elif type == 'micro':
         pseudo_intermediate = []
         for sent_id in range(0, len(morph_sentlist)):
             sent = re.sub(u'[_/\dA-Z]', '', morph_sentlist[sent_id])
@@ -316,7 +316,7 @@ def morph2pseudo(raw_sentlist, morph_sentlist, type):
         eojeol_sentlist = getEojeolList(raw_sentlist)
 
         # For each sentence in input list
-        out_classic = []
+        out_micro = []
         for sentIdx in range(0, len(eojeol_sentlist)):
             print('sentence #: ' + str(sentIdx))
             eoj = eojeol_sentlist[sentIdx]
@@ -328,14 +328,14 @@ def morph2pseudo(raw_sentlist, morph_sentlist, type):
                 e = eoj[itemIdx]
                 p = pseu[itemIdx]
 
-                pseudo_item = pseudoClassic(e, p)
+                pseudo_item = pseudomicro(e, p)
                 pseudo_sent = pseudo_sent + u' ' + pseudo_item
 
-            out_classic.append(pseudo_sent)
+            out_micro.append(pseudo_sent)
 
-        out_classic = tightenString(out_classic)
+        out_micro = tightenString(out_micro)
 
-        return out_classic
+        return out_micro
 
 
 def pseudomorph(rawText, morphText, pseudoType):
@@ -343,19 +343,19 @@ def pseudomorph(rawText, morphText, pseudoType):
     corpus = readfileUTF8(rawText)
     morph = readfileUTF8(morphText)
 
-    if pseudoType == 'simple':
-        print('(2) MORPH -> PSEUDO: simple')
-        output_simple = morph2pseudo(corpus, morph, 'simple')
+    if pseudoType == 'medium':
+        print('(2) MORPH -> PSEUDO: medium')
+        output_medium = morph2pseudo(corpus, morph, 'medium')
 
-        print('(3) WRITE OUTPUT: simple')
-        writefile(output_simple, 'simple.txt')
+        print('(3) WRITE OUTPUT: medium')
+        writefile(output_medium, 'medium.txt')
         print('Process finished')
 
-    elif pseudoType == 'classic':
-        print('(2) MORPH -> PSEUDO: classic')
-        output_classic = morph2pseudo(corpus, morph, 'classic')
+    elif pseudoType == 'micro':
+        print('(2) MORPH -> PSEUDO: micro')
+        output_micro = morph2pseudo(corpus, morph, 'micro')
 
-        print('(3) WRITE OUTPUT: classic')
-        writefile(output_classic, 'classic.txt')
+        print('(3) WRITE OUTPUT: micro')
+        writefile(output_micro, 'micro.txt')
         print('Process finished')
 

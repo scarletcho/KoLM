@@ -70,7 +70,7 @@ morphTag('normalized.txt', 'tagged.txt')
 
 # (6) Pseudo-morpheme analysis from raw & morpheme-tagged text
 from kolm.tag import *
-pseudomorph('normalized.txt', 'tagged.txt', 'classic')
+pseudomorph('normalized.txt', 'tagged.txt', 'micro')
 
 
 # (7) Generate files for building LM (i.e. 'lexicon.txt', 'textraw')

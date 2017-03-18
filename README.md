@@ -184,18 +184,18 @@
 	- **morph2pseudo***(raw\_sentlist, morph_sentlist, type)*
 
 			# 문장 리스트로부터 의사형태소(최소 크기) 문장 리스트 생성
-			>> morph2pseudo(raw_sentlist, morph_sentlist, 'classic')
+			>> morph2pseudo(raw_sentlist, morph_sentlist, 'micro')
 	
 			# 문장 리스트로부터 의사형태소(중간 크기) 문장 리스트 생성
-			>> morph2pseudo(raw_sentlist, morph_sentlist, 'simple')
+			>> morph2pseudo(raw_sentlist, morph_sentlist, 'medium')
 			
 	- **pseudomorph***(rawText, morphText, pseudoType)*
 		
 			# 문장 하나로부터 의사형태소(최소 크기) 문장 생성
-			>> pseudomorph(rawText, morphText, 'classic')
+			>> pseudomorph(rawText, morphText, 'micro')
 
 			# 문장 하나로부터 의사형태소(중간 크기) 문장 생성
-			>> pseudomorph(rawText, morphText, 'simple')
+			>> pseudomorph(rawText, morphText, 'medium')
 
 
 </br>
