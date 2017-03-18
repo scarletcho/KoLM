@@ -61,8 +61,6 @@ def readfileUTF8(fname):
             line = re.sub(u'\n', u'', line)
             if line != u'':
                 corpus.append(line)
-            if not line:
-                break
     return corpus
 
 
@@ -92,8 +90,6 @@ def readRules(pver, rulebook):
                         rule_out.append(IOlist[1])
                     else:   # If output is empty (i.e. deletion rule)
                         rule_out.append(u'')
-            if not line:
-                break
 
     return rule_in, rule_out
 

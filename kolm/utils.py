@@ -168,20 +168,18 @@ def removeHeader(headeredfname):
 
 
 def readfileUTF8(fname):
-    f = open(fname, 'r')
-    corpus = []
+    with open(fname, 'r') as f:
+        corpus = []
 
-    for line in f:
-        if ver_info[0] == 2:
-            line = unicode(line.encode("utf-8"))
-            line = re.sub(u'\n', u'', line)
-        elif ver_info[0] == 3:
-            line = re.sub('\n', '', line)
-        if line != u'':
-            corpus.append(line)
-        if not line: break
+        for line in f:
+            if ver_info[0] == 2:
+                line = unicode(line.encode("utf-8"))
+                line = re.sub(u'\n', u'', line)
+            elif ver_info[0] == 3:
+                line = re.sub('\n', '', line)
+            if line != u'':
+                corpus.append(line)
 
-    f.close()
     return corpus
 
 
