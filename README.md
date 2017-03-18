@@ -73,6 +73,7 @@
 	  
 		>> from kolm.utils import *  
   
+  
 1. **File management**  
 	- **readfileUTF8***(fname)*  
 	  
@@ -118,8 +119,9 @@
 	  
 			>> convertEncoding('mydir', 'utf-16', 'utf-8')  
 	  
-  
+
 </br>  
+  
 ## 2. normalize  
 - Start by importing every method in **kolm.normalize**  
 	  
@@ -139,11 +141,13 @@
 	- **bySentence***(corpus)*  
   
 			>> bySentence(corpus)  
-			  
+
 	- **removeNonHangul***(line)*  
-	  
+  
 			>> removeNonHangul(line)  
+
 </br>  
+  
 2. **Character reading in Korean**  
 	- Alphabets	  
 		- **readABC***(line)*  
@@ -164,13 +168,16 @@
 		  
 				>> readHangulLetter('ㅊ을 ㅈ으로 적었다')  
 				치읓을 지읒으로 적었다  
+
 </br>  
+  
 3. **Number reading in Korean**  
 	- **readNumber***(line)*  
 	  
 			>> readNumber(line)  
   
 </br>  
+  
 ## 3. tag  
 - Start by importing every method in **kolm.tag**  
 	  
@@ -181,7 +188,9 @@
 	  
 			# Mecab 형태소분석  
 			>> morphTag(in_fname, out_fname)  
+
 </br>  
+  
 2. **Pseudo-morphemes**    
 	- **morph2pseudo***(raw\_sentlist, morph_sentlist, type)*  
   
@@ -199,8 +208,8 @@
 			# 문장 하나로부터 의사형태소(중간 크기) 문장 생성  
 			>> pseudomorph(rawText, morphText, 'medium')  
   
-  
 </br>  
+  
 ## 4. lm  
 - Start by importing every method in **kolm.lm**  
 	  
@@ -237,11 +246,13 @@
   
 			# Run a test on a testset with a specific rulebook  
 			>> runTest(rulebook, testset)  
-			  
+	
 	- **readRules***(pver, rulebook)*  
   
 			>> readRules(pver, rulebook)  
+
 </br>  
+  
 2. **Auxiliaries**  
 	- **phone2prono***(phones, rule\_in, rule\_out)*  
 	  
