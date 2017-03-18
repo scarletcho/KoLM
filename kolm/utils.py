@@ -171,8 +171,7 @@ def readfileUTF8(fname):
     f = open(fname, 'r')
     corpus = []
 
-    while True:
-        line = f.readline()
+    for line in f:
         if ver_info[0] == 2:
             line = unicode(line.encode("utf-8"))
             line = re.sub(u'\n', u'', line)
