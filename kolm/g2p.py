@@ -53,8 +53,7 @@ def readfileUTF8(fname):
     with open(fname, 'r') as f:
         corpus = []
 
-        while True:
-            line = f.readline()
+        for line in f:
             if sys.version_info[0] == 2:
                 line = unicode(line.encode("utf-8"))
             else:
@@ -62,8 +61,6 @@ def readfileUTF8(fname):
             line = re.sub(u'\n', u'', line)
             if line != u'':
                 corpus.append(line)
-            if not line:
-                break
     return corpus
 
 
@@ -78,8 +75,7 @@ def readRules(pver, rulebook):
         rule_in = []
         rule_out = []
 
-        while True:
-            line = f.readline()
+        for line in f:
             if pver == 2:
                 line = unicode(line.encode("utf-8"))
                 line = re.sub(u'\n', u'', line)
@@ -94,8 +90,6 @@ def readRules(pver, rulebook):
                         rule_out.append(IOlist[1])
                     else:   # If output is empty (i.e. deletion rule)
                         rule_out.append(u'')
-            if not line:
-                break
 
     return rule_in, rule_out
 
