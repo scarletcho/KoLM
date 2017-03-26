@@ -5,8 +5,6 @@ runKoLM.py
 
 This is a sample wrapper for using kolm Python package.
 
-Usage: $ python runkolm.py rawCorpusPath
-
 Yejin Cho (scarletcho@gmail.com)
 
 Last updated: 2017-02-22
