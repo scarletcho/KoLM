@@ -239,10 +239,10 @@
 		>> from kolm.g2p import *  
   
 1. **Main**  
-	- **runKoG2P** *(rulebook, rulebook\_path)*  
+	- **runKoG2P** *(hangeul_sequence, rulebook\_path)*  
 	  
-			# Run Korean G2P on a textfile  
-			>> runKoG2P(rulebook, rulebook_path)  
+			# Run Korean G2P on a sequence  
+		>> runKoG2P(hangeul_sequence, rulebook_path)  
 	  
 	- **runTest** *(rulebook, testset)*  
   
