@@ -242,7 +242,7 @@
 	- **runKoG2P** *(hangeul_sequence, rulebook\_path)*  
 	  
 			# Run Korean G2P on a sequence  
-		>> runKoG2P(hangeul_sequence, rulebook_path)  
+			>> runKoG2P(hangeul_sequence, rulebook_path)  
 	  
 	- **runTest** *(rulebook, testset)*  
   
